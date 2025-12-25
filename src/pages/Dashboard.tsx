@@ -17,7 +17,8 @@ import {
   Youtube, 
   Music2,
   User,
-  LogOut
+  LogOut,
+  History
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/lib/auth-context';
@@ -144,6 +145,11 @@ export default function Dashboard() {
           </Link>
 
           <div className="flex items-center gap-4">
+            <Link to="/history">
+              <Button variant="ghost" size="icon" title="Generation History">
+                <History className="w-5 h-5" />
+              </Button>
+            </Link>
             
             <Link to="/account">
               <Button variant="ghost" size="icon">
