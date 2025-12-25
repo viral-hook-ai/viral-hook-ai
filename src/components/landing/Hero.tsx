@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Play, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function Hero() {
@@ -60,14 +60,8 @@ export function Hero() {
           >
             <Link to="/auth">
               <Button variant="hero" size="xl" className="group">
-                Try Free
+                Get Started Free
                 <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
-            <Link to="/auth?upgrade=true">
-              <Button variant="hero-outline" size="xl">
-                <Play className="w-5 h-5" />
-                Upgrade to Pro
               </Button>
             </Link>
           </motion.div>

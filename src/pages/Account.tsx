@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { 
   Sparkles, 
-  Crown, 
   Zap,
   ArrowLeft,
   LogOut,
@@ -11,25 +10,16 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/lib/auth-context';
-import { useToast } from '@/hooks/use-toast';
 
 export default function Account() {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   useEffect(() => {
     if (!user) {
       navigate('/auth');
     }
   }, [user, navigate]);
-
-  const handleUpgrade = () => {
-    toast({
-      title: 'Coming Soon!',
-      description: 'Pro subscriptions will be available via Stripe integration.',
-    });
-  };
 
   const handleLogout = async () => {
     await signOut();
@@ -83,17 +73,8 @@ export default function Account() {
                 <div>
                   <p className="text-sm text-muted-foreground">Current Plan</p>
                   <div className="flex items-center gap-2">
-                    {profile.plan === 'pro' ? (
-                      <>
-                        <Crown className="w-5 h-5 text-primary" />
-                        <span className="font-medium">Pro</span>
-                      </>
-                    ) : (
-                      <>
-                        <Zap className="w-5 h-5 text-muted-foreground" />
-                        <span className="font-medium">Free</span>
-                      </>
-                    )}
+                    <Zap className="w-5 h-5 text-primary" />
+                    <span className="font-medium">Free (Unlimited)</span>
                   </div>
                 </div>
               </div>
@@ -101,70 +82,48 @@ export default function Account() {
               <div className="flex items-center justify-between py-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Generations Used</p>
-                  <p className="font-medium">
-                    {profile.plan === 'pro' ? (
-                      <span className="text-primary">Unlimited</span>
-                    ) : (
-                      `${profile.generations_count} / 5`
-                    )}
-                  </p>
+                  <p className="font-medium text-primary">Unlimited</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Upgrade Card */}
-          {profile.plan === 'free' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="relative rounded-2xl bg-gradient-hero p-8 text-primary-foreground shadow-glow overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-              
-              <div className="relative">
-                <div className="flex items-center gap-2 mb-4">
-                  <Crown className="w-6 h-6" />
-                  <h2 className="text-2xl font-bold">Upgrade to Pro</h2>
-                </div>
-                
-                <p className="text-primary-foreground/80 mb-6">
-                  Get unlimited generations and unlock premium features
-                </p>
-
-                <ul className="space-y-3 mb-8">
-                  {[
-                    'Unlimited content generations',
-                    'Premium viral hooks',
-                    'Trending hashtag analysis',
-                    '7-day posting plans',
-                    'Priority support',
-                    'Export to PDF',
-                  ].map((feature) => (
-                    <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="w-5 h-5" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="flex items-baseline gap-2 mb-6">
-                  <span className="text-4xl font-bold">$19</span>
-                  <span className="text-primary-foreground/80">/month</span>
-                </div>
-
-                <Button 
-                  variant="secondary" 
-                  size="lg"
-                  className="w-full"
-                  onClick={handleUpgrade}
-                >
-                  Upgrade Now
-                </Button>
+          {/* Features Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="relative rounded-2xl bg-gradient-hero p-8 text-primary-foreground shadow-glow overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            
+            <div className="relative">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-6 h-6" />
+                <h2 className="text-2xl font-bold">All Features Included</h2>
               </div>
-            </motion.div>
-          )}
+              
+              <p className="text-primary-foreground/80 mb-6">
+                Enjoy unlimited access to all features — completely free!
+              </p>
+
+              <ul className="space-y-3">
+                {[
+                  'Unlimited content generations',
+                  'Premium viral hooks',
+                  'Trending hashtag analysis',
+                  '7-day posting plans',
+                  'All platforms supported',
+                  'Export to PDF',
+                ].map((feature) => (
+                  <li key={feature} className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
 
           {/* Logout */}
           <div className="glass-strong rounded-2xl shadow-card p-8">

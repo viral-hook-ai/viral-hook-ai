@@ -17,9 +17,7 @@ import {
   Youtube, 
   Music2,
   User,
-  LogOut,
-  Crown,
-  Zap
+  LogOut
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/lib/auth-context';
@@ -53,7 +51,6 @@ export default function Dashboard() {
   const [platform, setPlatform] = useState('instagram');
   const [tone, setTone] = useState('viral');
   const [loading, setLoading] = useState(false);
-  const [freeLimit, setFreeLimit] = useState(5);
   
   const { user, profile, signOut, refreshProfile } = useAuth();
   const navigate = useNavigate();
@@ -65,43 +62,11 @@ export default function Dashboard() {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    // Fetch free limit from settings
-    const fetchSettings = async () => {
-      const { data } = await supabase
-        .from('app_settings')
-        .select('value')
-        .eq('key', 'free_limit')
-        .single();
-      
-      if (data) {
-        setFreeLimit(parseInt(data.value as string) || 5);
-      }
-    };
-    fetchSettings();
-  }, []);
-
-  const remainingGenerations = profile?.plan === 'pro' 
-    ? 'Unlimited' 
-    : Math.max(0, freeLimit - (profile?.generations_count || 0));
-
-  const canGenerate = profile?.plan === 'pro' || 
-    (profile?.generations_count || 0) < freeLimit;
-
   const handleGenerate = async () => {
     if (!topic.trim()) {
       toast({
         title: 'Topic Required',
         description: 'Please enter a content topic or niche.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    if (!canGenerate) {
-      toast({
-        title: 'Limit Reached',
-        description: 'Upgrade to Pro for unlimited generations.',
         variant: 'destructive',
       });
       return;
@@ -179,19 +144,6 @@ export default function Dashboard() {
           </Link>
 
           <div className="flex items-center gap-4">
-            {profile?.plan === 'pro' ? (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-hero text-primary-foreground text-sm font-medium">
-                <Crown className="w-4 h-4" />
-                Pro
-              </div>
-            ) : (
-              <Link to="/account">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Zap className="w-4 h-4" />
-                  Upgrade
-                </Button>
-              </Link>
-            )}
             
             <Link to="/account">
               <Button variant="ghost" size="icon">
@@ -220,19 +172,16 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-2xl mx-auto"
         >
-          {/* Usage Counter */}
+          {/* Usage Info */}
           <div className="mb-8 p-4 rounded-xl glass shadow-card flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">Generations Remaining</p>
-              <p className="text-2xl font-bold">{remainingGenerations}</p>
+              <p className="text-sm text-muted-foreground">Generations</p>
+              <p className="text-2xl font-bold text-primary">Unlimited</p>
             </div>
-            {profile?.plan === 'free' && (
-              <Link to="/account">
-                <Button variant="gradient" size="sm">
-                  Get Unlimited
-                </Button>
-              </Link>
-            )}
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium">
+              <Sparkles className="w-4 h-4" />
+              Free Forever
+            </div>
           </div>
 
           {/* Generation Form */}
@@ -299,7 +248,7 @@ export default function Dashboard() {
                 size="xl"
                 className="w-full"
                 onClick={handleGenerate}
-                disabled={loading || !canGenerate}
+                disabled={loading}
               >
                 {loading ? (
                   <>
@@ -313,16 +262,6 @@ export default function Dashboard() {
                   </>
                 )}
               </Button>
-
-              {!canGenerate && (
-                <p className="text-center text-sm text-muted-foreground">
-                  You've reached your free limit.{' '}
-                  <Link to="/account" className="text-primary hover:underline">
-                    Upgrade to Pro
-                  </Link>{' '}
-                  for unlimited generations.
-                </p>
-              )}
             </div>
           </div>
         </motion.div>
