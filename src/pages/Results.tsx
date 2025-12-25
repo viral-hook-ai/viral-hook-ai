@@ -11,7 +11,12 @@ import {
   Zap,
   Hash,
   MessageSquare,
-  Calendar
+  Calendar,
+  Share2,
+  Twitter,
+  Linkedin,
+  Facebook,
+  Link as LinkIcon
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -103,6 +108,36 @@ ${result.postingPlan.map((p) => `${p.day}: ${p.idea}`).join('\n')}
     });
   };
 
+  const getShareText = () => {
+    const hook = result.hooks[0] || '';
+    const caption = result.captions[0] || '';
+    const hashtags = result.hashtags.slice(0, 5).join(' ');
+    return `${hook}\n\n${caption}\n\n${hashtags}`;
+  };
+
+  const shareToTwitter = () => {
+    const text = encodeURIComponent(getShareText());
+    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+  };
+
+  const shareToLinkedIn = () => {
+    const text = encodeURIComponent(getShareText());
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}&summary=${text}`, '_blank');
+  };
+
+  const shareToFacebook = () => {
+    window.open(`https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(getShareText())}`, '_blank');
+  };
+
+  const copyShareLink = async () => {
+    const shareText = getShareText();
+    await navigator.clipboard.writeText(shareText);
+    toast({
+      title: 'Copied!',
+      description: 'Share text copied to clipboard.',
+    });
+  };
+
   const sections = [
     {
       title: 'Viral Hooks',
@@ -166,11 +201,55 @@ ${result.postingPlan.map((p) => `${p.day}: ${p.idea}`).join('\n')}
           className="mb-8 text-center"
         >
           <h1 className="text-3xl font-bold mb-2">Your Viral Content</h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground mb-6">
             Generated for <span className="text-foreground font-medium">{topic}</span> on{' '}
             <span className="capitalize text-foreground font-medium">{platform}</span> with{' '}
             <span className="capitalize text-foreground font-medium">{tone}</span> tone
           </p>
+
+          {/* Social Share Buttons */}
+          <div className="flex items-center justify-center gap-3 flex-wrap">
+            <span className="text-sm text-muted-foreground flex items-center gap-2">
+              <Share2 className="w-4 h-4" />
+              Share:
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={shareToTwitter}
+              className="gap-2 hover:bg-[#1DA1F2]/10 hover:text-[#1DA1F2] hover:border-[#1DA1F2]/50"
+            >
+              <Twitter className="w-4 h-4" />
+              Twitter
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={shareToLinkedIn}
+              className="gap-2 hover:bg-[#0A66C2]/10 hover:text-[#0A66C2] hover:border-[#0A66C2]/50"
+            >
+              <Linkedin className="w-4 h-4" />
+              LinkedIn
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={shareToFacebook}
+              className="gap-2 hover:bg-[#1877F2]/10 hover:text-[#1877F2] hover:border-[#1877F2]/50"
+            >
+              <Facebook className="w-4 h-4" />
+              Facebook
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={copyShareLink}
+              className="gap-2"
+            >
+              <LinkIcon className="w-4 h-4" />
+              Copy Text
+            </Button>
+          </div>
         </motion.div>
 
         {/* Content Sections */}
