@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { 
@@ -26,7 +25,6 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [stats, setStats] = useState({ totalUsers: 0, totalGenerations: 0 });
-  const [freeLimit, setFreeLimit] = useState('5');
   const [aiPrompt, setAiPrompt] = useState('You are a viral short-form content strategist.');
 
   useEffect(() => {
@@ -61,10 +59,7 @@ export default function Admin() {
           .select('*');
 
         if (settings) {
-          const limit = settings.find(s => s.key === 'free_limit');
           const prompt = settings.find(s => s.key === 'ai_prompt');
-          
-          if (limit) setFreeLimit(String(limit.value).replace(/"/g, ''));
           if (prompt) setAiPrompt(String(prompt.value).replace(/"/g, ''));
         }
 
@@ -88,11 +83,6 @@ export default function Admin() {
     setSaving(true);
     
     try {
-      await supabase
-        .from('app_settings')
-        .update({ value: freeLimit })
-        .eq('key', 'free_limit');
-
       await supabase
         .from('app_settings')
         .update({ value: JSON.stringify(aiPrompt) })
@@ -187,20 +177,6 @@ export default function Admin() {
               </h2>
 
               <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="freeLimit">Free Plan Generation Limit</Label>
-                  <Input
-                    id="freeLimit"
-                    type="number"
-                    value={freeLimit}
-                    onChange={(e) => setFreeLimit(e.target.value)}
-                    className="max-w-xs"
-                  />
-                  <p className="text-sm text-muted-foreground">
-                    Number of generations allowed for free users per month
-                  </p>
-                </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="aiPrompt">AI System Prompt</Label>
                   <Textarea
