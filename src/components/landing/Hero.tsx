@@ -2,6 +2,13 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import customer1 from '@/assets/customer-1.jpg';
+import customer2 from '@/assets/customer-2.jpg';
+import customer3 from '@/assets/customer-3.jpg';
+import customer4 from '@/assets/customer-4.jpg';
+import customer5 from '@/assets/customer-5.jpg';
+
+const customerImages = [customer1, customer2, customer3, customer4, customer5];
 
 export function Hero() {
   return (
@@ -74,13 +81,13 @@ export function Hero() {
             className="mt-16 flex flex-col items-center gap-4"
           >
             <div className="flex -space-x-3">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div
+              {customerImages.map((img, i) => (
+                <img
                   key={i}
-                  className="w-10 h-10 rounded-full bg-gradient-hero border-2 border-background flex items-center justify-center text-primary-foreground font-semibold text-sm"
-                >
-                  {String.fromCharCode(64 + i)}
-                </div>
+                  src={img}
+                  alt={`Customer ${i + 1}`}
+                  className="w-10 h-10 rounded-full border-2 border-background object-cover"
+                />
               ))}
             </div>
             <p className="text-muted-foreground">
