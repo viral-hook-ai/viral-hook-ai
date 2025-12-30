@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/lib/auth-context';
+import logo from '@/assets/logo.png';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -30,11 +31,8 @@ export function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-hero flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold">ViralHook AI</span>
+          <Link to="/" className="flex items-center">
+            <img src={logo} alt="ViralHook AI" className="h-12 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
